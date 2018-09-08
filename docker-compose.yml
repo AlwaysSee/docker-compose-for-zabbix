@@ -1,0 +1,78 @@
+version: '3'
+services:
+    #1 安装数据库zabbix-mysql-server
+  zabbix-mysql:
+    restart: always
+    image: mysql/mysql-server:5.7
+    container_name: zabbix-mysql-server
+    hostname: zabbix-mysql-server
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_bin
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=zabbix
+    ports:
+      - 3700:3306
+    volumes:
+      - "/home/mysql/zabbixDB:/var/lib/mysql"
+    network_mode: bridge
+
+    #2 安装zabbix-server-mysql
+  zabbix-server:
+    restart: always
+    image: zabbix/zabbix-server-mysql
+    container_name: zabbix-server-mysql
+    hostname: zabbix-server-mysql
+    links:
+      - zabbix-mysql:mysql
+    depends_on:
+      - zabbix-mysql
+    environment:
+      - DB_SERVER_HOST=mysql
+      - MYSQL_USER=zabbix
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_PASSWORD=123456
+    ports:
+      - "10051:10051"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/docker/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - /data/docker/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+    network_mode: bridge
+
+    #安装web
+  web:
+    restart: always
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    container_name: zabbix-web
+    hostname: zabbix-web-nginx-mysql
+    links:
+      - zabbix-mysql:mysql
+      - zabbix-server:zabbix-server
+    environment:
+      - PHP_TZ=Asia/Shanghai
+      - DB_SERVER_HOST=mysql
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=zabbix
+      - ZBX_SERVER_HOST=zabbix-server
+    ports:
+     - 8000:80
+     - 8443:443
+    network_mode: bridge
+
+    #安装zabbix-agent
+  agent:
+    restart: always
+    image: zabbix/zabbix-agent
+    container_name: zabbix-agent
+    hostname: Zabbix-server
+    links:
+    - zabbix-server:zabbix-server
+    enviroment:
+    - ZBX_SERVER_HOST=192.168.119.75
+    - ZBX_SERVER_PORT=10051
+    ports:
+    - 10050:10050
+    network_mode: bridge
