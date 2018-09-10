@@ -55,14 +55,14 @@ docker run --name zabbix-java-gateway -t -d zabbix/zabbix-java-gateway:latest
 
 #zabbbix-agent的安装以及链接zabbix-server
 #server-local-agent
-docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-server" -e ZBX_SERVER_HOST="47.98.108.18"  -d zabbix/zabbix-agent
+docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-server" -e ZBX_SERVER_HOST="server-ip"  -d zabbix/zabbix-agent
 #server-agent-aws
-docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-aws" -e ZBX_SERVER_HOST="47.98.108.18" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
+docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-aws" -e ZBX_SERVER_HOST="server-ip" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
 #server-agent-xinjie
-docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-xinjie" -e ZBX_SERVER_HOST="47.98.108.18" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
+docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-xinjie" -e ZBX_SERVER_HOST="server-ip" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
 
 #测试服务器75主机
 #server-agent-server
-docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-server" -e ZBX_SERVER_HOST="192.168.119.75" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
+docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-server" -e ZBX_SERVER_HOST="server-ip" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
 #server-agent-80
-docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-80" -e ZBX_SERVER_HOST="192.168.119.75" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
+docker run --restart=always --name zabbix-agent -p 10050:10050 -e ZBX_HOSTNAME="zabbix-80" -e ZBX_SERVER_HOST="server-ip" -e ZBX_SERVER_PORT=10051 -d zabbix/zabbix-agent
